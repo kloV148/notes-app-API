@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  django-notes-app:
+    container_name: notes_django
+    build: ./notes_django
+    command: python manage.py runserver 0.0.0.0:8000
+    restart: always
+    volumes:
+      - ./notes_django:/app
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./env_vars/notes_django.env
+    depends_on:
+      - notes_db
+
+  notes_db:
+    image: postgres
+    restart: always
+    env_file:
+      - ./env_vars/notes_db.env
+    volumes:
+      - notes_db_data:/var/lib/postgresql/data
+
+volumes:
+  notes_db_data:
